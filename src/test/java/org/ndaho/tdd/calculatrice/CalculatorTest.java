@@ -102,16 +102,6 @@ public class CalculatorTest {
     }
 
     @Test
-    public void longCalcul_shouldComputeInLessThan1Second() {
-        // Arrange
-
-        // Act
-        calculatorUnderTest.longCalculation();
-
-        // Assert
-        // ...
-    }
-    @Test
     public void listDigits_shouldReturnsTheListOfDigits_ofPositiveInteger() {
         // GIVEN
         int number = -95897;
