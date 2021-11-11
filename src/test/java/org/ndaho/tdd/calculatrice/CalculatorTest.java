@@ -101,7 +101,6 @@ public class CalculatorTest {
         assertThat(produit).isEqualTo(expectedResult);
     }
 
-    @Timeout(1)
     @Test
     public void longCalcul_shouldComputeInLessThan1Second() {
         // Arrange

@@ -24,7 +24,7 @@ public class Calculator {
     public void longCalculation() {
         try {
             // Attendre 1 seconde
-            Thread.sleep(1000);
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
