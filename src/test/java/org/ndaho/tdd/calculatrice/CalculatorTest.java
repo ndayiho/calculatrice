@@ -3,7 +3,7 @@ package org.ndaho.tdd.calculatrice;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.core.Logger;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
