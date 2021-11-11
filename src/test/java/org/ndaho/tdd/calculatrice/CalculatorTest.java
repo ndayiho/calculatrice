@@ -1,30 +1,42 @@
 package org.ndaho.tdd.calculatrice;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 
+import org.apache.log4j.Logger;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.ndaho.tdd.calculatrice.utils.logs.LoggingExtension;
 
 import java.text.MessageFormat;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Set;
 
+@ExtendWith(LoggingExtension.class)
 public class CalculatorTest {
-    private Calculator calculator;
+    private Calculator calculatorUnderTest;
     private static Instant startedAt;
 
+    private Logger logger;
+
+    public  void setLogger(Logger logger) {
+        this.logger = logger;
+    }
+
     @BeforeEach
-    public  void initCalculator() {
-        calculator = new Calculator();
-        System.out.println("Appel avant chaque test");
+    public void initCalculator() {
+        calculatorUnderTest = new Calculator();
+        logger.info("Appel avant chaque test");
     }
 
     @AfterEach
     public void cleanCalculator() {
-        System.out.println("Appel après chaque test");
-        calculator = null;
+        logger.info("Appel après chaque test");
+        calculatorUnderTest = null;
     }
 
     @BeforeAll
@@ -44,16 +56,16 @@ public class CalculatorTest {
 
 
     @Test
-    public  void testAddTwoPostiveNumbers() {
+    public void testAddTwoPostiveNumbers() {
 //        ARRANGE
         final int a = 2;
         final int b = 5;
 
 //        ACT
-        final int somme = calculator.add(a, b);
+        final int somme = calculatorUnderTest.add(a, b);
 
 //        ASSERT
-        assertEquals(7, somme);
+        assertThat(somme).isEqualTo(7);
     }
 
     @Test
@@ -62,10 +74,11 @@ public class CalculatorTest {
         final int a = -2;
         final int b = 5;
         //        ACT
-        final int multi = calculator.multiply(a, b);
+        final int multi = calculatorUnderTest.multiply(a, b);
 
         //        ASSERT
         assertEquals(-10, multi);
+        assertThat(multi).isEqualTo(-10);
     }
 
     @ParameterizedTest(name = "{0}x0 doit etre égal à 0")
@@ -73,9 +86,9 @@ public class CalculatorTest {
     public void multiply_shouldReturnZero_ofZeroWithMultipleIntegers(int nbre) {
         //pas arrange--> tout est pret
         //act multiplier par zero
-        final int produit = calculator.multiply(nbre, 0);
+        final int produit = calculatorUnderTest.multiply(nbre, 0);
         //assert
-        assertEquals(0, produit);
+        assertThat(produit).isEqualTo(0);
     }
 
     @ParameterizedTest(name = "{0}x{1} doit etre égal à {2}")
@@ -83,9 +96,9 @@ public class CalculatorTest {
     public void multiply_shouldReturnZero_ofZeroWithMultipleIntegers(int nbre1, int nbre2, int expectedResult) {
         //pas arrange--> tout est pret
         //act multiplier two numbers
-        final int produit = calculator.multiply(nbre1, nbre2);
+        final int produit = calculatorUnderTest.multiply(nbre1, nbre2);
         //assert
-        assertEquals(expectedResult, produit);
+        assertThat(produit).isEqualTo(expectedResult);
     }
 
     @Timeout(1)
@@ -94,10 +107,20 @@ public class CalculatorTest {
         // Arrange
 
         // Act
-        calculator.longCalculation();
+        calculatorUnderTest.longCalculation();
 
         // Assert
         // ...
     }
+    @Test
+    public void listDigits_shouldReturnsTheListOfDigits_ofPositiveInteger() {
+        // GIVEN
+        int number = -95897;
 
+        // WHEN
+        Set<Integer> actualDigits = calculatorUnderTest.digitsSet(number);
+
+        // THEN
+        assertThat(actualDigits).containsExactlyInAnyOrder(5, 7, 8, 9);
+    }
 }
