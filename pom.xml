@@ -20,16 +20,32 @@
         <sonar.projectKey>java-ndaho_calculatrice</sonar.projectKey>
         <sonar.organization>java-ndaho-calclatrice</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <dep.junit.version>5.5.1</dep.junit.version>
     </properties>
 
     <!-- Déclaration de la dépendance vers JUnit -->
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>5.5.1</version>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${dep.junit.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${dep.junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>3.1.0</version>
+            <scope>test</scope>
+        </dependency>
+
 
         <dependency>
             <groupId>org.assertj</groupId>
@@ -37,6 +53,7 @@
             <version>3.13.2</version>
             <scope>test</scope>
         </dependency>
+
 
         <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
         <dependency>
