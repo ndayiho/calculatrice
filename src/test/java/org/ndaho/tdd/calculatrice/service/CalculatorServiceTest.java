@@ -3,6 +3,7 @@ package org.ndaho.tdd.calculatrice.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.ndaho.tdd.calculatrice.domain.Calculator;
@@ -10,8 +11,9 @@ import org.ndaho.tdd.calculatrice.domain.model.CalculationModel;
 import org.ndaho.tdd.calculatrice.domain.model.CalculationType;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CalculatorServiceTest {
@@ -32,12 +34,14 @@ la classe CalculationModel porte uniquement des données en entrée et en sortie
 
     @Mock //plus besoin d'initialiser sa valeur
     Calculator calculator;
+    @Mock //plus besoin d'initialiser sa valeur
+    SolutionFormatter solutionFormatter;
 
     CalculatorService classUnderTest;
 
     @BeforeEach //pense bien instancier la CUT pour chaque test!!!!!
     public void init() {
-        classUnderTest = new CalculatorServiceImpl(calculator);
+        classUnderTest = new CalculatorServiceImpl(calculator, solutionFormatter);
     }
 
     @Test
@@ -57,19 +61,60 @@ la classe CalculationModel porte uniquement des données en entrée et en sortie
         assertThat(result).isEqualTo(3);
     }
 
-//    @Test
-//    public void add_returnsTheSum_ofTwoNegativeNumbers() {
-//        final int result = classUnderTest.calculate(
-//                        new CalculationModel(CalculationType.ADDITION, -1, 2))
-//                .getSolution();
-//
-//        assertThat(result).isEqualTo(1);
-//    }
-//
-//    @Test
-//    public void add_returnsTheSum_ofZeroAndZero() {
-//        final int result = classUnderTest.calculate(
-//                new CalculationModel(CalculationType.ADDITION, 0, 0)).getSolution();
-//        assertThat(result).isEqualTo(0);
-//    }
+    @Test
+    public void add_returnsTheSum_ofTwoNegativeNumbers() {
+        //GIVEN --> je simule l'appelle de add
+        when(calculator.add(-1, 2)).thenReturn(1);
+        //WHEN
+        final int result = classUnderTest.calculate(
+                        new CalculationModel(CalculationType.ADDITION, -1, 2))
+                .getSolution();
+
+        //verifie que la methode add a ete appelé
+        verify(calculator, times(1)).add(-1, 2);
+        //assert
+        assertThat(result).isEqualTo(1);
+    }
+
+    //Paramétrez vos mocks avec des paramètres génériques
+    @Test
+    public void add_returnsTheSum_ofZeroAndZero() {
+        //Given
+        when(calculator.add(any(Integer.class), any(Integer.class))).thenReturn(0);
+        //when
+        final int result = classUnderTest.calculate(
+                new CalculationModel(CalculationType.ADDITION, 0, 0)).getSolution();
+        //ASSERT
+        verify(calculator).add(any(Integer.class), any(Integer.class));
+        assertThat(result).isEqualTo(0);
+    }
+
+    @Test
+    public void calculate_shouldThrowIllegalArgumentException_forADivisionBy0() {
+        // GIVEN
+        when(calculator.divide(1, 0)).thenThrow(new ArithmeticException());
+
+        // WHEN
+        //by using Lamdas
+        Executable executable = () -> classUnderTest.calculate(
+                new CalculationModel(CalculationType.DIVISION, 1, 0));
+        assertThrows(IllegalArgumentException.class, executable);
+
+        // THEN
+        verify(calculator, times(1)).divide(1, 0);
+    }
+
+    @Test
+    public void calculate_shouldFormatSolution_forAnAddition() {
+        // GIVEN
+        when(calculator.add(10000, 3000)).thenReturn(13000);
+        when(solutionFormatter.format(13000)).thenReturn("13 000");
+
+        // WHEN
+        final String formattedResult = classUnderTest.calculate(
+                new CalculationModel(CalculationType.ADDITION, 10000, 3000)).getFormatedSolution();
+
+        // THEN
+        assertThat(formattedResult).isEqualTo("13 000");
+    }
 }
