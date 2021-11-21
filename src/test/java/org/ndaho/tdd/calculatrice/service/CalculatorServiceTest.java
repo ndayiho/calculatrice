@@ -3,6 +3,7 @@ package org.ndaho.tdd.calculatrice.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.ndaho.tdd.calculatrice.domain.Calculator;
@@ -10,6 +11,7 @@ import org.ndaho.tdd.calculatrice.domain.model.CalculationModel;
 import org.ndaho.tdd.calculatrice.domain.model.CalculationType;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -83,5 +85,20 @@ la classe CalculationModel porte uniquement des données en entrée et en sortie
         //ASSERT
         verify(calculator).add(any(Integer.class), any(Integer.class));
         assertThat(result).isEqualTo(0);
+    }
+
+    @Test
+    public void calculate_shouldThrowIllegalArgumentException_forADivisionBy0() {
+        // GIVEN
+        when(calculator.divide(1, 0)).thenThrow(new ArithmeticException());
+
+        // WHEN
+        //by using Lamdas
+        Executable executable = () -> classUnderTest.calculate(
+                new CalculationModel(CalculationType.DIVISION, 1, 0));
+        assertThrows(IllegalArgumentException.class, executable);
+
+        // THEN
+        verify(calculator, times(1)).divide(1, 0);
     }
 }

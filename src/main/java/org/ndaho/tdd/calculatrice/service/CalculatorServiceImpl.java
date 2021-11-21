@@ -29,7 +29,11 @@ public class CalculatorServiceImpl implements CalculatorService {
                 response = calculator.multiply(calculationModel.getLeftArgument(), calculationModel.getRightArgument());
                 break;
             case DIVISION:
-                response = calculator.divide(calculationModel.getLeftArgument(), calculationModel.getRightArgument());
+                try {
+                    response = calculator.divide(calculationModel.getLeftArgument(), calculationModel.getRightArgument());
+                } catch (ArithmeticException ex) {
+                    throw new IllegalArgumentException(ex.getMessage());
+                }
                 break;
             default:
                 throw new UnsupportedOperationException("Unsupported calculations");
