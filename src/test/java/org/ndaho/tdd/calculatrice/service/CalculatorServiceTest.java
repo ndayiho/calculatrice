@@ -34,12 +34,14 @@ la classe CalculationModel porte uniquement des données en entrée et en sortie
 
     @Mock //plus besoin d'initialiser sa valeur
     Calculator calculator;
+    @Mock //plus besoin d'initialiser sa valeur
+    SolutionFormatter solutionFormatter;
 
     CalculatorService classUnderTest;
 
     @BeforeEach //pense bien instancier la CUT pour chaque test!!!!!
     public void init() {
-        classUnderTest = new CalculatorServiceImpl(calculator);
+        classUnderTest = new CalculatorServiceImpl(calculator, solutionFormatter);
     }
 
     @Test
@@ -100,5 +102,19 @@ la classe CalculationModel porte uniquement des données en entrée et en sortie
 
         // THEN
         verify(calculator, times(1)).divide(1, 0);
+    }
+
+    @Test
+    public void calculate_shouldFormatSolution_forAnAddition() {
+        // GIVEN
+        when(calculator.add(10000, 3000)).thenReturn(13000);
+        when(solutionFormatter.format(13000)).thenReturn("13 000");
+
+        // WHEN
+        final String formattedResult = classUnderTest.calculate(
+                new CalculationModel(CalculationType.ADDITION, 10000, 3000)).getFormatedSolution();
+
+        // THEN
+        assertThat(formattedResult).isEqualTo("13 000");
     }
 }

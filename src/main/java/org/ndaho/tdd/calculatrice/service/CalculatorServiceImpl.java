@@ -8,16 +8,18 @@ import org.ndaho.tdd.calculatrice.domain.model.CalculationType;
 public class CalculatorServiceImpl implements CalculatorService {
 
     private final Calculator calculator;
+    private SolutionFormatter solutionFormatter;
 
-    public CalculatorServiceImpl(Calculator calculator) {
+    public CalculatorServiceImpl(Calculator calculator, SolutionFormatter solutionFormatter) {
         this.calculator = calculator;
+        this.solutionFormatter = solutionFormatter;
     }
 
     @Override
     public CalculationModel calculate(CalculationModel calculationModel) {
         final CalculationType type = calculationModel.getType();
 
-        Integer response = null;
+        Integer response;
         switch (type) {
             case ADDITION:
                 response = calculator.add(calculationModel.getLeftArgument(), calculationModel.getRightArgument());
@@ -40,7 +42,8 @@ public class CalculatorServiceImpl implements CalculatorService {
         }
 
         calculationModel.setSolution(response);
+        calculationModel.setFormatedSolution(solutionFormatter.format(response));
+
         return calculationModel;
     }
-
 }
