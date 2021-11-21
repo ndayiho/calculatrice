@@ -19,6 +19,6 @@ class SolutionFormatterTest {
         //when
         final String formatedSoluton = solutionFormatter.format(givenresp);
         //assert
-        assertThat(formatedSoluton).isEqualTo("1 500 023");
+        assertThat(formatedSoluton).isEqualTo("1 500  023");
     }
 }
