@@ -1,8 +1,10 @@
 package org.ndaho.tdd.calculatrice.domain;
 
+import javax.inject.Named;
 import java.util.HashSet;
 import java.util.Set;
 
+@Named
 public class Calculator {
 
     public int add(int a, int b) {

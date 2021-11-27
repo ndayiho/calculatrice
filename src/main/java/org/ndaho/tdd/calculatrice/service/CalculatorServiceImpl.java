@@ -5,6 +5,9 @@ import org.ndaho.tdd.calculatrice.domain.Calculator;
 import org.ndaho.tdd.calculatrice.domain.model.CalculationModel;
 import org.ndaho.tdd.calculatrice.domain.model.CalculationType;
 
+import javax.inject.Named;
+
+@Named
 public class CalculatorServiceImpl implements CalculatorService {
 
     private final Calculator calculator;
