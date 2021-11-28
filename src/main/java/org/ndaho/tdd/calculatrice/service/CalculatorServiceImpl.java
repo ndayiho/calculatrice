@@ -4,6 +4,7 @@ package org.ndaho.tdd.calculatrice.service;
 import org.ndaho.tdd.calculatrice.domain.Calculator;
 import org.ndaho.tdd.calculatrice.domain.model.CalculationModel;
 import org.ndaho.tdd.calculatrice.domain.model.CalculationType;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.inject.Named;
 
@@ -13,6 +14,7 @@ public class CalculatorServiceImpl implements CalculatorService {
     private final Calculator calculator;
     private SolutionFormatter solutionFormatter;
 
+    @Autowired
     public CalculatorServiceImpl(Calculator calculator, SolutionFormatter solutionFormatter) {
         this.calculator = calculator;
         this.solutionFormatter = solutionFormatter;
