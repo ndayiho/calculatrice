@@ -1,4 +1,4 @@
-name: Job for test
+name: Job for tests(unit & integration tests)
 on:
   push:
     branches:
@@ -23,5 +23,5 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      - name: Test
-        run: mvn test
+      - name: verify Tests
+        run: mvn verify
