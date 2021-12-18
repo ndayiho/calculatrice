@@ -1,42 +1,30 @@
 package org.ndaho.tdd.calculatrice;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.assertj.core.api.Assertions.*;
-
-import org.apache.logging.log4j.core.Logger;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.ndaho.tdd.calculatrice.domain.Calculator;
-import org.ndaho.tdd.calculatrice.utils.logs.LoggingExtension;
 
 import java.text.MessageFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Set;
 
-@ExtendWith(LoggingExtension.class)
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class CalculatorTest {
     private Calculator calculatorUnderTest;
     private static Instant startedAt;
 
-    private Logger logger;
-
-    public  void setLogger(Logger logger) {
-        this.logger = logger;
-    }
-
     @BeforeEach
     public void initCalculator() {
         calculatorUnderTest = new Calculator();
-        logger.info("Appel avant chaque test");
     }
 
     @AfterEach
     public void cleanCalculator() {
-        logger.info("Appel après chaque test");
         calculatorUnderTest = null;
     }
 
