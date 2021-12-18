@@ -6,12 +6,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -20,23 +16,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-//pour démarrer notre application en entier, en utilisant ce qui suit pour rendre notre application joignable par un navigateur durant le
 public class StudentMultiplicationJourneyE2E {
 
     @LocalServerPort
     private Integer port;
-
     private WebDriver webDriver = null;
-    private String baseUrl = null;
+    private String baseUrl;
 
     @BeforeAll
-    public static void setUp() {
-        WebDriverManager.chromedriver().setup();
+    public static void setUpFirefoxDriver() {
+        WebDriverManager.firefoxdriver().setup();
     }
 
     @BeforeEach
     public void setUpWebDriver() {
-        webDriver = new ChromeDriver();
+        webDriver = new FirefoxDriver();
         baseUrl = "http://localhost:" + port + "/calculator";
     }
 
@@ -49,25 +43,28 @@ public class StudentMultiplicationJourneyE2E {
 
     @Test
     public void aStudentUsesTheCalculatorToMultiplyTwoBySixteen() {
-
         // GIVEN
         webDriver.get(baseUrl);
-        final WebElement leftField = webDriver.findElement(By.id("left"));
-        final WebElement typeDropdown = webDriver.findElement(By.id("type"));
-        final WebElement rightField = webDriver.findElement(By.id("right"));
-        final WebElement submitButton = webDriver.findElement(By.id("submit"));
+        final CalculatorPage calculatorPage = new CalculatorPage(webDriver);
 
         // WHEN
-        leftField.sendKeys("2");
-        typeDropdown.sendKeys("x");
-        rightField.sendKeys("16");
-        submitButton.click();
+        final String solution = calculatorPage.multiply("2", "16");
 
         // THEN
-        final WebDriverWait waiter = new WebDriverWait(webDriver, 5);
-        final WebElement solutionElement = waiter.until(
-                ExpectedConditions.presenceOfElementLocated(By.id("solution")));
-        final String solution = solutionElement.getText();
         assertThat(solution).isEqualTo("32"); // 2 x 16
+
+    }
+
+    @Test
+    public void aStudentUsesTheCalculatorToAddTwoToSixteen() throws InterruptedException {
+        // GIVEN
+        webDriver.get(baseUrl);
+        final CalculatorPage calculatorPage = new CalculatorPage(webDriver);
+
+        // WHEN
+        final String solution = calculatorPage.add("2", "16");
+
+        // THEN
+        assertThat(solution).isEqualTo("18"); // 2 + 16
     }
 }
